@@ -2,22 +2,24 @@ import streamlit as st
 import pandas as pd
 import gspread
 from google.oauth2 import service_account
-from oauth2client.service_account import ServiceAccountCredentials
 
-# Function to initialize connection to the Google Sheets
-def init_connection():
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(
-        st.secrets["gcp_service_account"],
-        scopes=[
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive",
-        ],
-    )
-    return gspread.authorize(credentials)
+
+# Use the new `google-auth` library for credentials
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"],
+    scopes=[
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive",
+    ],
+)
+
+# Use gspread to authorize the credentials
+gc = gspread.authorize(credentials)
+
+
 
 # Function to save dataframe to Google Sheet
 def save_to_sheet(df, sheet_name):
-    gc = init_connection()
     sh = gc.open(sheet_name)
     worksheet = sh.sheet1
     # Convert DataFrame to list of lists
