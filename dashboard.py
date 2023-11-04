@@ -77,16 +77,13 @@ def add_custom_question():
 st.header('Predefined Questions')
 yes_no_radio('Are there any large cracks in walls?', 'structural_cracks')
 yes_no_radio('Is the roof missing any tiles?', 'roof_condition')
-yes_no_radio('Do taps and showers function properly?', 'plumbing')
-yes_no_radio('Do all light switches and outlets function?', 'electrical_system')
-yes_no_radio('Is the house in good condition?', 'hvac_condition')
 yes_no_radio('Do windows and doors have proper insulation?', 'windows_doors_insulation')
 rating_scale('How would you rate the quality of insulation?', 'insulation_quality')
-yes_no_radio('Any signs of pest infestation?', 'pests')
-rating_scale('How would you rate the neighborhood?', 'neighborhood_rating')
 yes_no_radio('Does the property layout suit your lifestyle?', 'property_layout')
-yes_no_radio('Are smoke detectors present and functional?', 'smoke_detectors')
 yes_no_radio('Does the house seem well maintained?', 'maintenance')
+rating_scale('How would you rate the neighborhood?', 'neighborhood_rating')
+rating_scale('How would you rate the level of competition?', 'competition_rating')
+rating_scale('How would you rate the space?', 'space_rating')
 
 # Add any additional custom questions
 add_custom_question()
@@ -96,7 +93,10 @@ st.header('Final Thoughts')
 overall_impression = rating_scale('Overall impression out of 5', 'overall_impression')
 notes = st.text_area("Additional notes:")
 responses.append({'Question': 'Overall Impression', 'Response': overall_impression})
+responses.append({'Question': 'What do you like about it?', 'Response': like_notes})
+responses.append({'Question': 'What do you dislike about it?', 'Response': dislike_notes})
 responses.append({'Question': 'Additional Notes', 'Response': notes})
+
 
 # Assume 'df_all_questions' is the final DataFrame you want to save
 df_all_questions = pd.DataFrame(responses)  # Example DataFrame creation
