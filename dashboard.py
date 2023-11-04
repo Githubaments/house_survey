@@ -91,12 +91,12 @@ add_custom_question()
 # Overall impression and notes section
 st.header('Final Thoughts')
 overall_impression = rating_scale('Overall impression out of 5', 'overall_impression')
+overall_impression_notes = st.text_area("Overall Impression:")
+like_notes = st.text_area("What do you like about it?")
+dislike_notes = st.text_area("What do you dislike about it?")
 notes = st.text_area("Additional notes:")
-overall_impression,like_notes,dislike_notes,notes = [],[],[],[]
-responses.append({'Question': 'Overall Impression', 'Response': overall_impression})
-responses.append({'Question': 'What do you like about it?', 'Response': like_notes})
-responses.append({'Question': 'What do you dislike about it?', 'Response': dislike_notes})
-responses.append({'Question': 'Additional Notes', 'Response': notes})
+
+responses.append([overall_impression_notes,like_notes,dislike_notes,notes])
 
 
 # Assume 'df_all_questions' is the final DataFrame you want to save
