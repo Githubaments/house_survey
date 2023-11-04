@@ -1,56 +1,77 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 
-@st.cache
-def load_data(file_path):
-    return pd.read_csv(file_path)
+# Title of the app
+st.title('House Viewing Checklist')
 
-def main():
-    st.title("Personal Health Dashboard")
+# Initialize an empty list to store the responses and custom questions
+responses = []
+custom_questions = []
 
-    file_path = st.file_uploader("Upload your personal data CSV file", type=["csv"])
-    if file_path is not None:
-        df = load_data(file_path)
-        st.dataframe(df)
+# Address input at the top
+st.header('Property Details')
+address = st.text_input("Address of the Property:")
+responses.append({'Question': 'Address of the Property', 'Response': address})
 
-        # Choose the header to plot
-        selected_header = st.selectbox("Select a header to plot over time", df.columns)
+# Function to create a yes/no radio button and store response
+def yes_no_radio(label, key):
+    response = st.radio(label, ('Yes', 'No'), key=key)
+    responses.append({'Question': label, 'Response': response})
+    return response
 
-        # Plotting the selected header over time using Plotly
-        fig = px.line(df, x='Time of Measurement', y=selected_header)
-        st.plotly_chart(fig)
+# Function to create a 1-5 rating scale and store response
+def rating_scale(label, key):
+    response = st.radio(label, [1, 2, 3, 4, 5], key=key)
+    responses.append({'Question': label, 'Response': response})
+    return response
 
-        # Showing some statistics
-        st.write("### Personal Data Statistics")
-        st.write("Mean value: ", df[selected_header].mean())
-        st.write("Minimum value: ", df[selected_header].min())
-        st.write("Maximum value: ", df[selected_header].max())
+# Predefined questions (you can add more as needed)
+st.header('Predefined Questions')
 
-    google_fit_path = st.file_uploader("Upload your Google Fit data CSV file", type=["csv"])
-    if google_fit_path is not None:
-        df_google_fit = load_data(google_fit_path)
-        st.dataframe(df_google_fit)
+# Exterior section
+st.subheader('Exterior')
+yes_no_radio('Is the exterior appealing?', 'exterior_appeal')
 
-        # Choose the header to plot
-        selected_header_google_fit = st.selectbox("Select a header to plot over time", df_google_fit.columns)
+# Custom questions section
+st.header('Add Custom Question')
+custom_question = st.text_input("Enter your custom question:")
+question_type = st.selectbox("Select response type:", ('Yes/No', '1-5 Rating'))
 
-        # Plotting the selected header over time using Plotly
-        fig_google_fit = px.line(df_google_fit, x='Time of Measurement', y=selected_header_google_fit)
-        st.plotly_chart(fig_google_fit)
+if st.button('Add Question'):
+    if custom_question and question_type:
+        custom_questions.append((custom_question, question_type))
+        st.success(f"Added custom question: {custom_question}")
+    else:
+        st.error("Please enter a custom question and select a response type.")
 
-        # Showing some statistics
-        st.write("### Google Fit Data Statistics")
-        st.write("Mean value: ", df_google_fit[selected_header_google_fit].mean())
-        st.write("Minimum value: ", df_google_fit[selected_header_google_fit].min())
-        st.write("Maximum value: ", df_google_fit[selected_header_google_fit].max())
+for cq, qt in custom_questions:
+    st.subheader('Custom Questions')
+    if qt == 'Yes/No':
+        yes_no_radio(cq, cq)
+    elif qt == '1-5 Rating':
+        rating_scale(cq, cq)
 
-        # 7-day moving average of heart points
-        df_google_fit['7-day avg heart points'] = df_google_fit['Heart Points'].rolling(window=7).mean()
-        fig_7day_avg = px.line(df_google_fit, x='Time of Measurement', y='7-day avg heart points')
-        st.plotly_chart(fig_7day_avg)
+# Overall impression and notes section
+st.header('Final Thoughts')
+overall_impression = rating_scale('Overall impression out of 5', 'overall_impression')
+notes = st.text_area("Additional notes:")
+responses.append({'Question': 'Overall Impression', 'Response': overall_impression})
+responses.append({'Question': 'Additional Notes', 'Response': notes})
 
-        # Count of days with more than 10,000 steps
-        df_google_fit['over_10000'] = df_google_fit['Steps'] >= 10000
-        fig_steps = px.bar(df_google_fit, x='Time of Measurement', y='over_10000', color='over_10000')
-       
+# Submit button for all questions and the rest of the code for DataFrame creation and download
+if st.button('Submit All Questions'):
+    df_all_questions = pd.DataFrame(responses)
+    st.write('All Questions Responses:')
+    st.dataframe(df_all_questions)
+    
+    # Download button
+    st.download_button(
+        label="Download All Questions Results as CSV",
+        data=df_all_questions.to_csv(index=False).encode('utf-8'),
+        file_name='house_viewing_results.csv',
+        mime='text/csv',
+    )
+    st.success('All questions submitted!')
+
+# Reminder: To run the Streamlit app, save the code in a .py file and run it with the command:
+# streamlit run your_script.py
