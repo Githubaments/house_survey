@@ -92,6 +92,7 @@ add_custom_question()
 st.header('Final Thoughts')
 overall_impression = rating_scale('Overall impression out of 5', 'overall_impression')
 notes = st.text_area("Additional notes:")
+overall_impression,like_notes,dislike_notes,notes = [],[],[],[]
 responses.append({'Question': 'Overall Impression', 'Response': overall_impression})
 responses.append({'Question': 'What do you like about it?', 'Response': like_notes})
 responses.append({'Question': 'What do you dislike about it?', 'Response': dislike_notes})
