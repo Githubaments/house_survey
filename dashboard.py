@@ -79,7 +79,7 @@ yes_no_radio('Are there any large cracks in walls?', 'structural_cracks')
 yes_no_radio('Is the roof missing any tiles?', 'roof_condition')
 yes_no_radio('Do taps and showers function properly?', 'plumbing')
 yes_no_radio('Do all light switches and outlets function?', 'electrical_system')
-yes_no_radio('Is the HVAC system in good condition?', 'hvac_condition')
+yes_no_radio('Is the house in good condition?', 'hvac_condition')
 yes_no_radio('Do windows and doors have proper insulation?', 'windows_doors_insulation')
 rating_scale('How would you rate the quality of insulation?', 'insulation_quality')
 yes_no_radio('Any signs of pest infestation?', 'pests')
@@ -109,9 +109,13 @@ if st.button('Submit All Questions'):
     # Save to Google Sheets
     try:
         save_to_sheet(df_all_questions, 'Sheet1')  # Replace with your Google Sheet name
+        response = save_to_sheet(df_all_questions, 'YOUR_SHEET_NAME')
+        st.write(response.content)
+
         st.success('Responses have been successfully saved to Google Sheets.')
     except Exception as e:
         st.error(f"An error occurred: {e}")
+
 
     # Download button for CSV
     st.download_button(
