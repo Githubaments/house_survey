@@ -109,7 +109,7 @@ if st.button('Submit All Questions'):
     # Save to Google Sheets
     try:
         save_to_sheet(df_all_questions, 'Sheet1')  # Replace with your Google Sheet name
-        response = save_to_sheet(df_all_questions, 'YOUR_SHEET_NAME')
+        response = save_to_sheet(df_all_questions, 'Sheet1')
         st.write(response.content)
 
         st.success('Responses have been successfully saved to Google Sheets.')
