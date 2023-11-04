@@ -105,7 +105,7 @@ if st.button('Submit All Questions'):
     
     # Save to Google Sheets
     try:
-        save_to_sheet(df_all_questions, 'YOUR_SHEET_NAME')  # Replace with your Google Sheet name
+        save_to_sheet(df_all_questions, 'Sheet1')  # Replace with your Google Sheet name
         st.success('Responses have been successfully saved to Google Sheets.')
     except Exception as e:
         st.error(f"An error occurred: {e}")
