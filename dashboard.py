@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import gspread
+from google.oauth2 import service_account
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Function to initialize connection to the Google Sheets
